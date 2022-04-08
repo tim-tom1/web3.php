@@ -104,8 +104,9 @@ class HttpProvider extends Provider implements IProvider
             }
             return $res;
         };
-        $this->requestManager->sendPayload('[' . implode(',', $this->batch) . ']', $proxy);
+        $response = $this->requestManager->sendPayload('[' . implode(',', $this->batch) . ']', $proxy);
         $this->methods[] = [];
         $this->batch = [];
+        return $response;
     }
 }
