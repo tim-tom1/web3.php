@@ -33,6 +33,9 @@ use Web3\Validators\TagValidator;
 use Web3\Validators\QuantityValidator;
 use Web3\Formatters\AddressFormatter;
 
+/**
+ * @property \Web3\Providers\Provider $provider
+ */
 class Contract
 {
     /**
