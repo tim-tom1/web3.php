@@ -17,6 +17,9 @@ use stdClass;
 use kornrunner\Keccak;
 use phpseclib\Math\BigInteger as BigNumber;
 
+/**
+ * @property \Web3\Providers\Provider $provider
+ */
 class Utils
 {
     /**
@@ -354,12 +357,12 @@ class Utils
      * toEther
      * Change number from unit to ether.
      * For example:
-     * list($bnq, $bnr) = Utils::toEther('1', 'kether'); 
+     * $bnq = Utils::toEther('1', 'kether');
      * $bnq->toString(); // 1000
      * 
      * @param BigNumber|string|int $number
      * @param string $unit
-     * @return array
+     * @return \phpseclib\Math\BigInteger
      */
     public static function toEther($number, $unit)
     {
@@ -369,14 +372,14 @@ class Utils
         $wei = self::toWei($number, $unit);
         $bnt = new BigNumber(self::UNITS['ether']);
 
-        return $wei->divide($bnt);
+        return $wei->divide($bnt)[0];
     }
 
     /**
      * fromWei
      * Change number from wei to unit.
      * For example:
-     * list($bnq, $bnr) = Utils::fromWei('1000', 'kwei'); 
+     * $bnq = Utils::fromWei('1000', 'kwei');
      * $bnq->toString(); // 1
      * 
      * @param BigNumber|string|int $number
@@ -395,7 +398,7 @@ class Utils
         }
         $bnt = new BigNumber(self::UNITS[$unit]);
 
-        return $bn->divide($bnt);
+        return $bn->divide($bnt)[0];
     }
 
     /**

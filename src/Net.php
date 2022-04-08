@@ -17,7 +17,7 @@ use Web3\RequestManagers\RequestManager;
 use Web3\RequestManagers\HttpRequestManager;
 
 /**
- * @property \Web3\Providers\Provider
+ * @property \Web3\Providers\Provider $provider
  */
 class Net
 {
