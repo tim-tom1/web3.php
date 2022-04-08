@@ -54,7 +54,8 @@ class GetBlockByNumber extends EthMethod
      * @var array
      */
     protected $defaultValues = [
-        0 => 'latest'
+        0 => 'latest',
+	    1 => true
     ];
 
     /**

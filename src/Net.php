@@ -16,6 +16,9 @@ use Web3\Providers\HttpProvider;
 use Web3\RequestManagers\RequestManager;
 use Web3\RequestManagers\HttpRequestManager;
 
+/**
+ * @property \Web3\Providers\Provider
+ */
 class Net
 {
     /**

@@ -50,7 +50,9 @@ class GetBlockByHash extends EthMethod
      * 
      * @var array
      */
-    protected $defaultValues = [];
+    protected $defaultValues = [
+    	1 => true
+    ];
 
     /**
      * construct

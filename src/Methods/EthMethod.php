@@ -16,6 +16,10 @@ use RuntimeException;
 use Web3\Methods\IMethod;
 use Web3\Methods\JSONRPC;
 
+/**
+ * @property-read array $inputFormatters
+ * @property-read array $outputFormatters
+ */
 class EthMethod extends JSONRPC implements IMethod
 {
     /**

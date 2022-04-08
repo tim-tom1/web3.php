@@ -559,7 +559,6 @@ class Contract
      * call
      * Call function method.
      *
-     * @param mixed
      * @return mixed
      */
     public function call()
@@ -643,8 +642,7 @@ class Contract
     /**
      * estimateGas
      * Estimate function gas.
-     * 
-     * @param mixed
+     *
      * @return mixed
      */
     public function estimateGas()

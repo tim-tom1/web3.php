@@ -13,6 +13,9 @@ namespace Web3\Providers;
 
 use Web3\RequestManagers\RequestManager;
 
+/**
+ * @property \Web3\Providers\Provider
+ */
 class Provider
 {
     /**

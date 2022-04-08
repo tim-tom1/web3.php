@@ -16,6 +16,27 @@ use Web3\Providers\HttpProvider;
 use Web3\RequestManagers\RequestManager;
 use Web3\RequestManagers\HttpRequestManager;
 
+/**
+ * @property \Web3\Providers\Provider
+ *
+ * @method \phpseclib\Math\BigInteger protocolVersion()
+ * @method bool|array syncing()
+ * @method string coinbase()
+ * @method bool mining()
+ * @method \phpseclib\Math\BigInteger hashrate()
+ * @method \phpseclib\Math\BigInteger gasPrice()
+ * @method array accounts()
+ * @method \phpseclib\Math\BigInteger blockNumber()
+ * @method \phpseclib\Math\BigInteger getBalance(string $address, ?string $blockNumber = null)
+ * @method string getStorageAt(string $address, string $position = null, ?string $blockNumber = null)
+ * @method \phpseclib\Math\BigInteger getTransactionCount(string $address, ?string $blockNumber = null)
+ * @method \phpseclib\Math\BigInteger getBlockTransactionCountByHash(string $hash)
+ * @method \phpseclib\Math\BigInteger getBlockTransactionCountByNumber(?string $blockNumber = null)
+ * @method \phpseclib\Math\BigInteger getUncleCountByBlockHash(string $hash)
+ * @method \phpseclib\Math\BigInteger getUncleCountByBlockNumber(?string $blockNumber = null)
+ * @method \phpseclib\Math\BigInteger getUncleByBlockHashAndIndex(string $hash, string $index)
+ * @method \phpseclib\Math\BigInteger getUncleByBlockNumberAndIndex(string $blockNumber, string $index)
+ */
 class Eth
 {
     /**

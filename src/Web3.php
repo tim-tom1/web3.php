@@ -29,8 +29,8 @@ use Web3\RequestManagers\HttpRequestManager;
  * @property-read \Web3\Shh $shh
  * @property-read \Web3\Utils $utils
  *
- * @method void clientVersion()
- * @method void sha3(string $string)
+ * @method string clientVersion()
+ * @method string sha3(string $string)
  */
 class Web3
 {

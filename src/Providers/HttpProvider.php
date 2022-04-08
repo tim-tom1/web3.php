@@ -11,8 +11,7 @@
 
 namespace Web3\Providers;
 
-use Web3\Providers\Provider;
-use Web3\Providers\IProvider;
+use Web3\Methods\EthMethod;
 use Web3\RequestManagers\RequestManager;
 
 class HttpProvider extends Provider implements IProvider
@@ -38,7 +37,7 @@ class HttpProvider extends Provider implements IProvider
     /**
      * send
      * 
-     * @param \Web3\Methods\Method $method
+     * @param EthMethod $method
      * @return mixed
      */
     public function send($method)
@@ -79,7 +78,7 @@ class HttpProvider extends Provider implements IProvider
     /**
      * execute
      *
-     * @return void
+     * @return mixed
      */
     public function execute()
     {
