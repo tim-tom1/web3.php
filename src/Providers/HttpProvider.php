@@ -74,7 +74,7 @@ class HttpProvider extends Provider implements IProvider
      */
     public function batch($status)
     {
-        $status = is_bool($status);
+	    assert(is_bool($status));
 
         $this->isBatch = $status;
     }

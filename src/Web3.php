@@ -21,6 +21,17 @@ use Web3\Providers\HttpProvider;
 use Web3\RequestManagers\RequestManager;
 use Web3\RequestManagers\HttpRequestManager;
 
+/**
+ * @property \Web3\Providers\Provider $provider
+ * @property-read \Web3\Eth $eth
+ * @property-read \Web3\Net $net
+ * @property-read \Web3\Personal $personal
+ * @property-read \Web3\Shh $shh
+ * @property-read \Web3\Utils $utils
+ *
+ * @method void clientVersion()
+ * @method void sha3(string $string)
+ */
 class Web3
 {
     /**
@@ -283,7 +294,7 @@ class Web3
      */
     public function batch($status)
     {
-        $status = is_bool($status);
+	    assert(is_bool($status));
 
         $this->provider->batch($status);
     }

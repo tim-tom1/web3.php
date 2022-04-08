@@ -173,7 +173,7 @@ class Eth
      */
     public function batch($status)
     {
-        $status = is_bool($status);
+	    assert(is_bool($status));
 
         $this->provider->batch($status);
     }
