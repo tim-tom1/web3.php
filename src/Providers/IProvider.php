@@ -17,10 +17,9 @@ interface IProvider
      * send
      * 
      * @param \Web3\Methods\Method $method
-     * @param callable $callback
-     * @return void
+     * @return mixed
      */
-    public function send($method, $callback);  
+    public function send($method);
 
     /**
      * batch
@@ -36,5 +35,5 @@ interface IProvider
      * @param callable $callback
      * @return void
      */
-    public function execute($callback);
+    public function execute();
 }

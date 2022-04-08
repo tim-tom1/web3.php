@@ -39,27 +39,24 @@ class HttpProvider extends Provider implements IProvider
      * send
      * 
      * @param \Web3\Methods\Method $method
-     * @param callable $callback
-     * @return void
+     * @return mixed
      */
-    public function send($method, $callback)
+    public function send($method)
     {
         $payload = $method->toPayloadString();
 
         if (!$this->isBatch) {
-            $proxy = function ($err, $res) use ($method, $callback) {
+            $proxy = function ($err, $res) use ($method) {
                 if ($err !== null) {
-                    return call_user_func($callback, $err, null);
+                	throw new \RuntimeException($err);
                 }
                 if (!is_array($res)) {
                     $res = $method->transform([$res], $method->outputFormatters);
-                    return call_user_func($callback, null, $res[0]);
+                    return $res[0];
                 }
-                $res = $method->transform($res, $method->outputFormatters);
-
-                return call_user_func($callback, null, $res);
+                return $method->transform($res, $method->outputFormatters);
             };
-            $this->requestManager->sendPayload($payload, $proxy);
+            return $this->requestManager->sendPayload($payload, $proxy);
         } else {
             $this->methods[] = $method;
             $this->batch[] = $payload;
@@ -81,19 +78,18 @@ class HttpProvider extends Provider implements IProvider
 
     /**
      * execute
-     * 
-     * @param callable $callback
+     *
      * @return void
      */
-    public function execute($callback)
+    public function execute()
     {
         if (!$this->isBatch) {
             throw new \RuntimeException('Please batch json rpc first.');
         }
         $methods = $this->methods;
-        $proxy = function ($err, $res) use ($methods, $callback) {
+        $proxy = function ($err, $res) use ($methods) {
             if ($err !== null) {
-                return call_user_func($callback, $err, null);
+	            throw new \RuntimeException($err);
             }
             foreach ($methods as $key => $method) {
                 if (isset($res[$key])) {
@@ -106,7 +102,7 @@ class HttpProvider extends Provider implements IProvider
                     }
                 }
             }
-            return call_user_func($callback, null, $res);
+            return $res;
         };
         $this->requestManager->sendPayload('[' . implode(',', $this->batch) . ']', $proxy);
         $this->methods[] = [];

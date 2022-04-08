@@ -441,21 +441,17 @@ class Contract
      * Deploy a contruct with params.
      * 
      * @param mixed
-     * @return void
+     * @return mixed
      */
     public function new()
     {
         if (isset($this->constructor)) {
             $constructor = $this->constructor;
             $arguments = func_get_args();
-            $callback = array_pop($arguments);
 
             $input_count = isset($constructor['inputs']) ? count($constructor['inputs']) : 0;
             if (count($arguments) < $input_count) {
                 throw new InvalidArgumentException('Please make sure you have put all constructor params and callback.');
-            }
-            if (is_callable($callback) !== true) {
-                throw new \InvalidArgumentException('The last param must be callback function.');
             }
             if (!isset($this->bytecode)) {
                 throw new \InvalidArgumentException('Please call bytecode($bytecode) before new().');
@@ -469,12 +465,7 @@ class Contract
             }
             $transaction['data'] = '0x' . $this->bytecode . Utils::stripZero($data);
 
-            $this->eth->sendTransaction($transaction, function ($err, $transaction) use ($callback){
-                if ($err !== null) {
-                    return call_user_func($callback, $err, null);
-                }
-                return call_user_func($callback, null, $transaction);
-            });
+            return $this->eth->sendTransaction($transaction);
         }
     }
 
@@ -483,14 +474,13 @@ class Contract
      * Send function method.
      * 
      * @param mixed
-     * @return void
+     * @return mixed
      */
     public function send()
     {
         if (isset($this->functions)) {
             $arguments = func_get_args();
             $method = array_splice($arguments, 0, 1)[0];
-            $callback = array_pop($arguments);
 
             if (!is_string($method)) {
                 throw new InvalidArgumentException('Please make sure the method is string.');
@@ -504,9 +494,6 @@ class Contract
             };
             if (count($functions) < 1) {
                 throw new InvalidArgumentException('Please make sure the method exists.');
-            }
-            if (is_callable($callback) !== true) {
-                throw new \InvalidArgumentException('The last param must be callback function.');
             }
 
             // check the last one in arguments is transaction object
@@ -564,12 +551,7 @@ class Contract
             $transaction['to'] = $this->toAddress;
             $transaction['data'] = $functionSignature . Utils::stripZero($data);
 
-            $this->eth->sendTransaction($transaction, function ($err, $transaction) use ($callback){
-                if ($err !== null) {
-                    return call_user_func($callback, $err, null);
-                }
-                return call_user_func($callback, null, $transaction);
-            });
+            return $this->eth->sendTransaction($transaction);
         }
     }
 
@@ -578,14 +560,13 @@ class Contract
      * Call function method.
      *
      * @param mixed
-     * @return void
+     * @return mixed
      */
     public function call()
     {
         if (isset($this->functions)) {
             $arguments = func_get_args();
             $method = array_splice($arguments, 0, 1)[0];
-            $callback = array_pop($arguments);
 
             if (!is_string($method)) {
                 throw new InvalidArgumentException('Please make sure the method is string.');
@@ -599,9 +580,6 @@ class Contract
             };
             if (count($functions) < 1) {
                 throw new InvalidArgumentException('Please make sure the method exists.');
-            }
-            if (is_callable($callback) !== true) {
-                throw new \InvalidArgumentException('The last param must be callback function.');
             }
 
             // check the arguments
@@ -658,14 +636,7 @@ class Contract
             $transaction['to'] = $this->toAddress;
             $transaction['data'] = $functionSignature . Utils::stripZero($data);
 
-            $this->eth->call($transaction, $defaultBlock, function ($err, $transaction) use ($callback, $function){
-                if ($err !== null) {
-                    return call_user_func($callback, $err, null);
-                }
-                $decodedTransaction = $this->ethabi->decodeParameters($function, $transaction);
-
-                return call_user_func($callback, null, $decodedTransaction);
-            });
+            return $this->ethabi->decodeParameters($function, $this->eth->call($transaction, $defaultBlock));
         }
     }
 
@@ -674,22 +645,18 @@ class Contract
      * Estimate function gas.
      * 
      * @param mixed
-     * @return void
+     * @return mixed
      */
     public function estimateGas()
     {
         if (isset($this->functions) || isset($this->constructor)) {
             $arguments = func_get_args();
-            $callback = array_pop($arguments);
 
             if (empty($this->toAddress) && !empty($this->bytecode)) {
                 $constructor = $this->constructor;
 
                 if (count($arguments) < count($constructor['inputs'])) {
                     throw new InvalidArgumentException('Please make sure you have put all constructor params and callback.');
-                }
-                if (is_callable($callback) !== true) {
-                    throw new \InvalidArgumentException('The last param must be callback function.');
                 }
                 if (!isset($this->bytecode)) {
                     throw new \InvalidArgumentException('Please call bytecode($bytecode) before estimateGas().');
@@ -717,9 +684,6 @@ class Contract
                 };
                 if (count($functions) < 1) {
                     throw new InvalidArgumentException('Please make sure the method exists.');
-                }
-                if (is_callable($callback) !== true) {
-                    throw new \InvalidArgumentException('The last param must be callback function.');
                 }
     
                 // check the last one in arguments is transaction object
@@ -778,12 +742,7 @@ class Contract
                 $transaction['data'] = $functionSignature . Utils::stripZero($data);
             }
 
-            $this->eth->estimateGas($transaction, function ($err, $gas) use ($callback) {
-                if ($err !== null) {
-                    return call_user_func($callback, $err, null);
-                }
-                return call_user_func($callback, null, $gas);
-            });
+            return $this->eth->estimateGas($transaction);
         }
     }
 

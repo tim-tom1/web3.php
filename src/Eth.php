@@ -66,7 +66,7 @@ class Eth
      * 
      * @param string $name
      * @param array $arguments
-     * @return void
+     * @return mixed
      */
     public function __call($name, $arguments)
     {
@@ -76,35 +76,28 @@ class Eth
 
         $class = explode('\\', get_class());
 
-        if (preg_match('/^[a-zA-Z0-9]+$/', $name) === 1) {
-            $method = strtolower($class[1]) . '_' . $name;
-
-            if (!in_array($method, $this->allowedMethods)) {
-                throw new \RuntimeException('Unallowed rpc method: ' . $method);
-            }
-            if ($this->provider->isBatch) {
-                $callback = null;
-            } else {
-                $callback = array_pop($arguments);
-
-                if (is_callable($callback) !== true) {
-                    throw new \InvalidArgumentException('The last param must be callback function.');
-                }
-            }
-            if (!array_key_exists($method, $this->methods)) {
-                // new the method
-                $methodClass = sprintf("\Web3\Methods\%s\%s", ucfirst($class[1]), ucfirst($name));
-                $methodObject = new $methodClass($method, $arguments);
-                $this->methods[$method] = $methodObject;
-            } else {
-                $methodObject = $this->methods[$method];
-            }
-            if ($methodObject->validate($arguments)) {
-                $inputs = $methodObject->transform($arguments, $methodObject->inputFormatters);
-                $methodObject->arguments = $inputs;
-                $this->provider->send($methodObject, $callback);
-            }
+        if (!preg_match('/^[a-zA-Z0-9]+$/', $name) === 1) {
+	        throw new \RuntimeException('Unallowed rpc method');
         }
+        $method = strtolower($class[1]) . '_' . $name;
+
+        if (!in_array($method, $this->allowedMethods)) {
+            throw new \RuntimeException('Unallowed rpc method: ' . $method);
+        }
+        if (!array_key_exists($method, $this->methods)) {
+            // new the method
+            $methodClass = sprintf("\Web3\Methods\%s\%s", ucfirst($class[1]), ucfirst($name));
+            $methodObject = new $methodClass($method, $arguments);
+            $this->methods[$method] = $methodObject;
+        } else {
+            $methodObject = $this->methods[$method];
+        }
+	    if ($methodObject->validate($arguments)) {
+		    $inputs = $methodObject->transform($arguments, $methodObject->inputFormatters);
+		    $methodObject->arguments = $inputs;
+		    return $this->provider->send($methodObject);
+	    }
+	    throw new \RuntimeException('Validation error');
     }
 
     /**
