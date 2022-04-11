@@ -296,7 +296,7 @@ class Utils
      * 
      * @param BigNumber|string $number
      * @param string $unit
-     * @return \phpseclib\Math\BigInteger
+     * @return string
      */
     public static function toWei($number, $unit)
     {
@@ -350,7 +350,7 @@ class Utils
             return $whole->add($fraction);
         }
 
-        return $bn->multiply($bnt);
+        return $bn->multiply($bnt)->toString();
     }
 
     /**
@@ -362,17 +362,18 @@ class Utils
      * 
      * @param BigNumber|string|int $number
      * @param string $unit
-     * @return \phpseclib\Math\BigInteger
+     * @return string
      */
     public static function toEther($number, $unit)
     {
         // if ($unit === 'ether') {
         //     throw new InvalidArgumentException('Please use another unit.');
         // }
-        $wei = self::toWei($number, $unit);
+        $wei = new BigNumber(self::toWei($number, $unit));
         $bnt = new BigNumber(self::UNITS['ether']);
-
-        return $wei->divide($bnt)[0];
+	
+	    list($bnq, $bnr) = $wei->divide($bnt);
+        return $bnq->toString() . '.' . $bnr->toString();
     }
 
     /**
@@ -384,7 +385,7 @@ class Utils
      * 
      * @param BigNumber|string|int $number
      * @param string $unit
-     * @return \phpseclib\Math\BigInteger
+     * @return string
      */
     public static function fromWei($number, $unit)
     {
@@ -397,8 +398,9 @@ class Utils
             throw new InvalidArgumentException('fromWei doesn\'t support ' . $unit . ' unit.');
         }
         $bnt = new BigNumber(self::UNITS[$unit]);
-
-        return $bn->divide($bnt)[0];
+	
+	    list($bnq, $bnr) = $bn->divide($bnt);
+	    return $bnq->toString() . '.' . $bnr->toString();
     }
 
     /**
@@ -532,7 +534,7 @@ class Utils
                 $number = str_replace('-', '', $number, $count);
                 $negative1 = new BigNumber(-1);
             }
-            if (self::isZeroPrefixed($number) || preg_match('/^[0-9a-f]+$/i', $number) === 1) {
+            if (self::isZeroPrefixed($number) || preg_match('/[a-f]+/', $number) === 1) {
                 $number = self::stripZero($number);
                 $bn = new BigNumber($number, 16);
             } elseif (empty($number)) {
