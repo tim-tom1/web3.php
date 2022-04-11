@@ -366,14 +366,14 @@ class Utils
      */
     public static function toEther($number, $unit)
     {
-        // if ($unit === 'ether') {
-        //     throw new InvalidArgumentException('Please use another unit.');
-        // }
         $wei = new BigNumber(self::toWei($number, $unit));
         $bnt = new BigNumber(self::UNITS['ether']);
 	
-	    list($bnq, $bnr) = $wei->divide($bnt);
-        return $bnq->toString() . '.' . $bnr->toString();
+	    list($decimal, $precious) = $wei->divide($bnt);
+	    $decimal = $decimal->toString();
+	    $precious = $precious->toString();
+	
+	    return $decimal . '.' . str_repeat('0', strlen(self::UNITS['ether']) - strlen($precious) - 1) . $precious;
     }
 
     /**
