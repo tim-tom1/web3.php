@@ -567,8 +567,8 @@ class Contract
     public function call()
     {
         if (isset($this->functions)) {
-            $arguments = func_get_args();
-            $method = array_splice($arguments, 0, 1)[0];
+            $arguments = func_get_args()[0];
+            $method = array_shift($arguments);
 
             if (!is_string($method)) {
                 throw new InvalidArgumentException('Please make sure the method is string.');
