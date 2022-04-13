@@ -88,13 +88,16 @@ class Utils
      * @param bool $isPrefix
      * @return string
      */
-    public static function toHex($value, $isPrefix=false)
+    public static function toHex($value, $isPrefix = false)
     {
         if (is_numeric($value)) {
             // turn to hex number
             $bn = self::toBn($value);
             $hex = $bn->toHex(true);
             $hex = preg_replace('/^0+(?!$)/', '', $hex);
+            if($hex === '') {
+            	$hex = '0';
+            }
         } elseif (is_string($value)) {
             $value = self::stripZero($value);
             $hex = implode('', unpack('H*', $value));
